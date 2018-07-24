@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<project name="BuddiesBill grupo 5K" basedir=".." default="todo">
+	<property name="src" value="src" />
+	<property name="classes" value="classes" />
+	<property name="dist" value="dist" />
+	<property name="test" value="test" />
+	<property name="doc" value="doc" />
+	<property name="conf" value="etc" />
+	<property name="log" value="log" />
+	<property name="lib" value="lib/junit.jar: lib/log4j-api-2.5.jar: lib/log4j-core-2.5.jar: lib/org.hamcrest.core_1.3.0.v201303031735.jar" />
+
+
+	<property name="main" value="es.unileon.prg1.buddiesBill.BuddiesBill" />
+	<property name="paquete" value="es.unileon.prg1.buddiesBill.*" />
+	<property name="titulo" value="BuddiesBill 5k" />
+	<property name="nombre" value="BuddiesBill" />
+
+	<target name="limpiar">
+		<delete dir="${classes}" />
+		<delete dir="${doc}" />
+		<delete dir="${log}" />
+	</target>
+
+	<target name="compilar" depends="limpiar">
+		<mkdir dir="${classes}" />
+		<mkdir dir="${log}" />
+
+		<javac srcdir="${src}" destdir="${classes}" classpath="${lib}" verbose="false" debug="true" />
+		<!-- encoding="UTF-8" -->
+
+	</target>
+	<!--
+	<property file="build.properties"/>
+	<property name="java.encoding" value="ascii"/>
+	<javac encoding="${java.encoding}"
+		source="${java.source}">
+		<src path="${source.dir}" />
+		<classpath>
+			<fileset/>
+		</classpath>
+	</javac>
+
+-->
+
+
+	<target name="compilarTests" depends="compilar">
+		<mkdir dir="${classes}" />
+
+		<javac srcdir="${test}" destdir="${classes}" classpath="${lib}" includeantruntime="false" />
+
+		<echo message="Compilando test..." />
+	</target>
+
+	<target name="test" depends="compilarTests">
+		<java classname="org.junit.runner.JUnitCore">
+			<classpath>
+				<pathelement path="${classes}" />
+				<pathelement path="${lib}" />
+				<pathelement path="${conf}" />
+
+			</classpath>
+			<arg value="es.unileon.prg1.buddiesBill.AllTest" />
+		</java>
+	</target>
+
+	<target name="documentar">
+		<mkdir dir="${doc}" />
+
+		<javadoc sourcepath="${src}" classpath="${lib}" packagenames="${paquete}" destdir="${doc}" verbose="false" author="true" access="private" splitindex="true" version="true" windowtitle="${titulo}" doctitle="${titulo}" />
+	</target>
+
+	<target name="probar" depends="compilar">
+		<java classname="${main}">
+			<classpath>
+				<pathelement path="${classes}" />
+				<pathelement path="${lib}" />
+				<pathelement path="${conf}" />
+			</classpath>
+			<arg value="Weekend" />
+			<arg value="5" />
+			<arg value="20" />
+		</java>
+	</target>
+
+	<target name="todo" depends="limpiar, compilar, documentar, test, probar" />
+
+</project>
